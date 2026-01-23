@@ -102,3 +102,41 @@
   color: #6b7280;
   margin: 10px 0;
 }
+
+/* Input area layout */
+.chatbot-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Text input */
+.chatbot-text-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+.chatbot-text-input:focus {
+  border-color: #081025;
+}
+
+/* Send button */
+.chatbot-send-btn {
+  padding: 0 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #081025;
+  color: white;
+  cursor: pointer;
+}
+
+.chatbot-send-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
