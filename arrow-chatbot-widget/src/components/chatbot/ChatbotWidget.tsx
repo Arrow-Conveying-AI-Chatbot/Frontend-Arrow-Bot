@@ -1,27 +1,38 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./ChatbotWidget.css";
 import Logo from "../../assets/arro.png";
+import Attach from "../../assets/paperclip.png"
 
 const ChatbotWidget = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
 
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    console.log("User message:", message);
-    setMessage("");
-    setLoading(true);
+  const handleSendMessage = (text?: string) => {
+  const outgoingMessage = text ?? message;
 
-    // Simulate bot thinking (backend later)
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-  };
+  if (!outgoingMessage.trim() && !attachment) return;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSendMessage();
+  console.log("Message:", outgoingMessage);
+  console.log("Attachment:", attachment);
+
+  setMessage("");
+  setAttachment(null);
+  setShowQuickReplies(false);
+  setLoading(true);
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 1500);
+};
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAttachment(file);
     }
   };
 
@@ -41,44 +52,86 @@ const ChatbotWidget = () => {
 
       {/* Messages Area */}
       <div className="chatbot-messages">
-        <div className="chatbot-timestamp">09:00 AM</div>
-
         <div className="chatbot-message bot">
           <div className="chatbot-bubble">
             Hello How can I help you today?
           </div>
         </div>
 
-        <div className="chatbot-message user">
-          <div className="chatbot-bubble">
-            I need help with booking an appointment.
-          </div>
+        {showQuickReplies && !loading && (
+        <div className="chatbot-quick-replies">
+            <button onClick={() => handleSendMessage("Book Ticket")}>
+            Sell property 
+            </button>
+            <button onClick={() => handleSendMessage("View Events")}>
+            Buy Property 
+            </button>
+            <button onClick={() => handleSendMessage("Contact Support")}>
+            Get a Quote
+            </button>
         </div>
+        )}
 
-        {/* Loading spinner */}
+        {/* Typing indicator */}
         {loading && (
           <div className="chatbot-message bot">
-            <div className="chatbot-spinner"></div>
+            <div className="chatbot-typing">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         )}
       </div>
 
+      {/* Attachment preview */}
+      {attachment && (
+        <div className="chatbot-attachment-preview">
+          {attachment.type.startsWith("image/") ? (
+            <img
+              src={URL.createObjectURL(attachment)}
+              alt="preview"
+              className="chatbot-attachment-image"
+            />
+          ) : (
+            <span className="chatbot-attachment-file">
+                {/* <img src={Attach} alt="attachment file" /> */}
+               {attachment.name}
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Input Area */}
       <div className="chatbot-input">
+        <button
+          className="chatbot-attach-btn"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <img src={Attach} alt="attachment file" width={"20px"}/>
+        </button>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          hidden
+          accept="image/*,.pdf,.doc,.docx"
+          onChange={handleFileChange}
+        />
+
         <input
           type="text"
           className="chatbot-text-input"
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
           disabled={loading}
         />
 
         <button
           className="chatbot-send-btn"
-          onClick={handleSendMessage}
-          disabled={!message.trim() || loading}
+            onClick={() => handleSendMessage()}
+          disabled={loading || (!message.trim() && !attachment)}
         >
           Send
         </button>

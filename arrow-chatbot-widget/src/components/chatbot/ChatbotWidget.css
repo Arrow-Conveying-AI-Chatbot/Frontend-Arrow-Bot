@@ -157,3 +157,42 @@
     transform: rotate(360deg);
   }
 }
+
+/* Typing indicator */
+.chatbot-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background-color: #e5e7eb;
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.chatbot-typing span {
+  width: 6px;
+  height: 6px;
+  background-color: #081025;
+  border-radius: 50%;
+  animation: typing 1.4s infinite both;
+}
+
+.chatbot-typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chatbot-typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0% {
+    opacity: 0.3;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
