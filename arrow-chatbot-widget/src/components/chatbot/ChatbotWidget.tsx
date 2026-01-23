@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import "./ChatbotWidget.css";
-import Logo from "../../assets/arro.png";
+import Logo from "../../assets/arrowc.png";
 import Attach from "../../assets/paperclip.png";
 import Collapse from "../../assets/down.png";
 import Max from "../../assets/maximise.png";
