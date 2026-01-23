@@ -4,12 +4,19 @@ import Logo from "../../assets/arro.png";
 
 const ChatbotWidget = () => {
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
-    console.log("Message sent:", message);
-    setMessage(""); 
+    console.log("User message:", message);
+    setMessage("");
+    setLoading(true);
+
+    // Simulate bot thinking (backend later)
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,6 +54,13 @@ const ChatbotWidget = () => {
             I need help with booking an appointment.
           </div>
         </div>
+
+        {/* Loading spinner */}
+        {loading && (
+          <div className="chatbot-message bot">
+            <div className="chatbot-spinner"></div>
+          </div>
+        )}
       </div>
 
       {/* Input Area */}
@@ -58,12 +72,13 @@ const ChatbotWidget = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={loading}
         />
 
         <button
           className="chatbot-send-btn"
           onClick={handleSendMessage}
-          disabled={!message.trim()}
+          disabled={!message.trim() || loading}
         >
           Send
         </button>
